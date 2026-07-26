@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         shnlfriberg.online 猜人辅助助手
 // @namespace    http://tampermonkey.net/
-// @version      2.7
+// @version      2.8
 // @description  自动读取猜题反馈，连接到本地助手服务器，推荐最优猜测
 // @match        https://shnlfriberg.online/*
 // @icon         https://shnlfriberg.online/favicon.ico
@@ -551,7 +551,16 @@
         var delay = _shnl_guessCount === 0 ? 1000 : _shnl_responseDelay;
         setTimeout(function () {
             fillGameInput(name);
-            if (_shnl_autoSubmit && _shnl_guessCount > 0) setTimeout(autoSubmitGuess, 600);
+            // Auto-submit on ALL guesses (including first), not just after first
+            if (_shnl_autoSubmit) setTimeout(function () {
+                autoSubmitGuess();
+                // first guess: retry a few times since button might be disabled initially
+                if (_shnl_guessCount === 0) {
+                    for (var retry_i = 1; retry_i <= 5; retry_i++) {
+                        (function(r) { setTimeout(function() { autoSubmitGuess(); }, 600 + r * 400); })(retry_i);
+                    }
+                }
+            }, 600);
         }, delay);
     }
 
@@ -760,23 +769,37 @@
         });
     }
 
-    // ---- Storage ----
+    // ---- Storage (GM storage + localStorage fallback) ----
     function saveSetting(k, v) {
-        try { GM_setValue(k, v); } catch (e) { console.log("CS Helper: save failed " + k, e); }
+        try { GM_setValue(k, v); } catch (e) { console.log("CS Helper: GM_setValue failed", e); }
+        try { localStorage.setItem("shnl_" + k, JSON.stringify(v)); } catch (e) {}
     }
 
     function loadSettings() {
-        try {
-            var v;
-            v = GM_getValue("autoFill"); if (v !== undefined) _shnl_autoFill = v;
-            v = GM_getValue("autoSubmit"); if (v !== undefined) _shnl_autoSubmit = v;
-            v = GM_getValue("responseDelay"); if (v !== undefined) _shnl_responseDelay = v;
-            v = GM_getValue("confuse"); if (v !== undefined) _shnl_confuse = v;
-            v = GM_getValue("confuseProb"); if (v !== undefined) _shnl_confuseProb = v;
-            v = GM_getValue("matchHistory"); if (v) _shnl_matchHistory = v;
-            v = GM_getValue("panelPos"); if (v) _shnl_panelPos = v;
-            v = GM_getValue("tabPos"); if (v) _shnl_tabPos = v;
-        } catch (e) { console.log("CS Helper: loadSettings error", e); }
+        // Try GM storage first, fall back to localStorage
+        function getVal(k, fallback) {
+            try {
+                var v = GM_getValue(k);
+                if (v !== undefined && v !== null) return v;
+            } catch (e) {}
+            try {
+                var raw = localStorage.getItem("shnl_" + k);
+                if (raw) return JSON.parse(raw);
+            } catch (e) {}
+            return fallback;
+        }
+
+        _shnl_autoFill = getVal("autoFill", true);
+        _shnl_autoSubmit = getVal("autoSubmit", true);
+        _shnl_responseDelay = getVal("responseDelay", 1500);
+        _shnl_confuse = getVal("confuse", false);
+        _shnl_confuseProb = getVal("confuseProb", 0);
+        var hist = getVal("matchHistory", null);
+        if (hist) _shnl_matchHistory = hist;
+        var pp = getVal("panelPos", null);
+        if (pp) _shnl_panelPos = pp;
+        var tp = getVal("tabPos", null);
+        if (tp) _shnl_tabPos = tp;
 
         var c = function (id) { return document.getElementById(id); };
         if (c("shnl-autofill-cb")) c("shnl-autofill-cb").checked = _shnl_autoFill;
