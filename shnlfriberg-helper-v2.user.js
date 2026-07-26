@@ -487,7 +487,7 @@
         if (btn) { btn.click(); console.log("CS Helper: submit clicked"); }
     }
 
-    // ---- First guess ----
+    // ---- First guess (only fills, watchGame handles submit + feedback) ----
     function doFirstGuess() {
         if (_shnl_firstGuessDone) return;
         var input = document.querySelector("input[placeholder*='昵称'], form.input-bar input");
@@ -505,33 +505,8 @@
                     if (t.indexOf("friberg") !== -1) { items[i].click(); break; }
                 }
             }
-            setTimeout(function () {
-                var submitBtn = null;
-                var form = input.closest ? input.closest("form") : null;
-                if (form) {
-                    var btns = form.querySelectorAll("button");
-                    for (var j = 0; j < btns.length; j++) {
-                        if (!btns[j].disabled) { submitBtn = btns[j]; break; }
-                    }
-                }
-                if (!submitBtn) {
-                    var all = document.querySelectorAll(_shnl_submitBtnSelector);
-                    for (var k = 0; k < all.length; k++) {
-                        var txt = all[k].textContent.trim().toLowerCase();
-                        if (txt.indexOf("提") !== -1 || txt.indexOf("submit") !== -1 || txt.indexOf("guess") !== -1) {
-                            submitBtn = all[k]; break;
-                        }
-                    }
-                }
-                if (submitBtn) { submitBtn.click(); console.log("CS Helper: first guess submitted via button"); }
-                else {
-                    input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter", keyCode: 13, which: 13 }));
-                    input.dispatchEvent(new KeyboardEvent("keypress", { bubbles: true, key: "Enter", keyCode: 13, which: 13 }));
-                    input.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "Enter", keyCode: 13, which: 13 }));
-                    console.log("CS Helper: first guess submitted via Enter key");
-                }
-                _shnl_guessCount = 1;
-            }, 300);
+            // Don't set _shnl_guessCount here — let watchGame() detect the new row
+            // and send feedback to server naturally.
         }, 600);
     }
 
@@ -551,16 +526,8 @@
         var delay = _shnl_guessCount === 0 ? 1000 : _shnl_responseDelay;
         setTimeout(function () {
             fillGameInput(name);
-            // Auto-submit on ALL guesses (including first), not just after first
-            if (_shnl_autoSubmit) setTimeout(function () {
-                autoSubmitGuess();
-                // first guess: retry a few times since button might be disabled initially
-                if (_shnl_guessCount === 0) {
-                    for (var retry_i = 1; retry_i <= 5; retry_i++) {
-                        (function(r) { setTimeout(function() { autoSubmitGuess(); }, 600 + r * 400); })(retry_i);
-                    }
-                }
-            }, 600);
+            // Auto-submit: try once. watchGame() detects new rows and sends feedback.
+            if (_shnl_autoSubmit) setTimeout(autoSubmitGuess, 800);
         }, delay);
     }
 
