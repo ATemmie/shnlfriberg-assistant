@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 220px;
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 12px;
+      font-size: 13px;
+    }
+    h3 { color: #ffd700; font-size: 14px; margin-bottom: 8px; }
+    .row { display: flex; justify-content: space-between; align-items: center; margin: 6px 0; }
+    label { font-size: 12px; color: #ccc; cursor: pointer; }
+    input[type="checkbox"] { vertical-align: middle; margin-right: 4px; cursor: pointer; }
+    .note { font-size: 10px; color: #666; margin-top: 10px; text-align: center; }
+    hr { border: none; border-top: 1px solid #333; margin: 8px 0; }
+    .badge { font-size: 10px; color: #4ade80; text-align: center; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <h3>Shnlfriberg Helper</h3>
+  <div class="badge">✓ 离线运行，无需服务器</div>
+  <hr>
+  <div class="row">
+    <label><input type="checkbox" id="autofill"> 自动填入</label>
+  </div>
+  <div class="row">
+    <label><input type="checkbox" id="autosubmit"> 自动提交</label>
+  </div>
+  <hr>
+  <div class="row">
+    <span style="font-size:11px;color:#aaa;">数据</span>
+    <span style="font-size:11px;color:#ffd700;font-weight:700;">645 名选手</span>
+  </div>
+  <div class="note">装好即用，不需要启动任何东西</div>
+  <script src="popup.js"></script>
+</body>
+</html>
