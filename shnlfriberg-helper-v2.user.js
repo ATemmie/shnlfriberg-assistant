@@ -34,7 +34,6 @@
     var _shnl_responseDelay = 1500;
     var _shnl_confusedGuesses = [];
     var _shnl_gameOver = false;
-    var _shnl_firstGuessDone = false;
     var _shnl_resetCooldown = 0;
     var _shnl_panelPos = null;
     var _shnl_tabPos = null;
@@ -487,33 +486,14 @@
         if (btn) { btn.click(); console.log("CS Helper: submit clicked"); }
     }
 
-    // ---- First guess (only fills, watchGame handles submit + feedback) ----
-    function doFirstGuess() {
-        if (_shnl_firstGuessDone) return;
-        var input = document.querySelector("input[placeholder*='昵称'], form.input-bar input");
-        if (!input) { setTimeout(doFirstGuess, 600); return; }
-        _shnl_firstGuessDone = true;
-        var name = "friberg";
-        fillGameInput(name);
-        console.log("CS Helper: doFirstGuess -> " + name);
-        setTimeout(function () {
-            var list = document.querySelector("ul.autocomplete-list");
-            if (list) {
-                var items = list.querySelectorAll("li");
-                for (var i = 0; i < items.length; i++) {
-                    var t = items[i].textContent.trim().toLowerCase();
-                    if (t.indexOf("friberg") !== -1) { items[i].click(); break; }
-                }
-            }
-            // Don't set _shnl_guessCount here — let watchGame() detect the new row
-            // and send feedback to server naturally.
-        }, 600);
-    }
+    // ---- (first guess handled by autoFillRecommendation + watchGame) ----
 
     // ---- Auto-fill recommendation ----
     function autoFillRecommendation() {
         if (!_shnl_autoFill) return;
-        var name = (_shnl_guessCount === 0 && !_shnl_recommendation) ? "friberg" : _shnl_recommendation;
+        // First guess: wait for server recommendation, don't auto-fill
+        if (_shnl_guessCount === 0 && !_shnl_recommendation) return;
+        var name = _shnl_recommendation;
         if (!name) return;
         name = maybeConfuse(name);
         if (_shnl_guessCount > 0) {
