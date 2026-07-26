@@ -8,7 +8,7 @@ from database import Database, Player
 from engine import filter_candidates, Feedback, GREEN, YELLOW, GRAY, UP, DOWN, build_team_region_map
 from recommender import recommend, explain_recommendation
 
-XLSX_PATH = r"C:\player_scraper\players_database.xlsx"
+XLSX_PATH = r"players_database.xlsx"
 
 app = Flask(__name__)
 CORS(app)
