@@ -246,6 +246,7 @@
     <a href="#compare">版本对比</a>
     <a href="#install">安装</a>
     <a href="#features">功能</a>
+    <a href="#changelog">更新日志</a>
     <a href="#faq">常见问题</a>
     <a href="https://github.com/ATemmie/shnlfriberg-assistant" target="_blank">GitHub</a>
   </div>
@@ -415,6 +416,54 @@
         <h4>轻量快速</h4>
         <p>扩展仅 20 KB，运行时零开销，不影响游戏页面性能。</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ===== Version History ===== -->
+<section id="changelog">
+  <div class="container">
+    <div class="section-label">/ 版本历史</div>
+    <h2 class="section-title">更新日志</h2>
+
+    <div style="margin-top:24px;">
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:4px;">
+        <span style="background:var(--indigo);color:#fff;border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;">v3.1</span>
+        <span style="font-size:14px;font-weight:600;">预计算首猜 + 双胞胎检测</span>
+        <span style="font-size:12px;color:var(--text-3);">2026-07-27</span>
+      </div>
+      <ul style="font-size:13px;color:var(--text-2);padding-left:140px;margin:0 0 24px 0;line-height:1.8;">
+        <li>🎯 首猜预计算：开局直接推荐 <strong>ALEX（英国）</strong>（E=2.0959），省去 1-2 秒全量计算</li>
+        <li>🔍 双胞胎检测：自动识别 16 组属性相同的选手（如 EmiliaQAQ/starry），显示黄色提示「无法区分，逐一试名」，不再误判为已猜中</li>
+      </ul>
+
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:4px;">
+        <span style="background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;">v3.0</span>
+        <span style="font-size:14px;font-weight:600;">Chrome 扩展版发布</span>
+        <span style="font-size:12px;color:var(--text-3);">2026-07-27</span>
+      </div>
+      <ul style="font-size:13px;color:var(--text-2);padding-left:140px;margin:0 0 24px 0;line-height:1.8;">
+        <li>🚀 全新 Chrome 扩展，无需 Tampermonkey / Python</li>
+        <li>🧠 信息熵引擎用 JS 重写，完全浏览器端运行</li>
+        <li>📦 645 名选手数据内嵌（players.json），无需外部数据库</li>
+        <li>🖱️ 点击推荐名自动填入输入框，手动提交</li>
+        <li>🔁 多重重置检测：表格清空 + 按钮检测 + "第 X 局"文本</li>
+        <li>👥 支持单人 / 多人模式</li>
+      </ul>
+
+      <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:4px;">
+        <span style="background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;">v2.9</span>
+        <span style="font-size:14px;font-weight:600;">用户脚本 + 服务器版</span>
+        <span style="font-size:12px;color:var(--text-3);">2026-07-26</span>
+      </div>
+      <ul style="font-size:13px;color:var(--text-2);padding-left:140px;margin:0 0 24px 0;line-height:1.8;">
+        <li>📜 Tampermonkey 用户脚本读取 <strong>shnlfriberg.online</strong> 页面反馈</li>
+        <li>🐍 Python Flask 本地服务器 + 信息熵推荐</li>
+        <li>📊 Excel 数据库读取 645 名选手</li>
+        <li>⚡ 全自动填入 + 提交（依赖 React 渲染时机，不稳）</li>
+      </ul>
     </div>
   </div>
 </section>
