@@ -2,7 +2,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 
-BOOL_TRUE = {"yes", "true", "1", "active", "æ˜¯"}
+BOOL_TRUE = {"yes", "true", "1", "active", "æ˜?}
 
 
 class Player:
